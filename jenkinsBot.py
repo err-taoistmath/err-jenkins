@@ -42,7 +42,10 @@ class JenkinsBot(BotPlugin):
         if len(args.split()) > 1:
             return u'Please enter only one Job Name'
 
-        job_param = self.jenkins.get_job_info(args)['actions'][0]['parameterDefinitions']
+        if self.jenkins.get_job_info(args)['actions'][0] == {}:
+            job_param = self.jenkins.get_job_info(args)['actions'][1]['parameterDefinitions']
+        else:
+            job_param = self.jenkins.get_job_info(args)['actions'][0]['parameterDefinitions']
 
         return self.format_params(job_param)
 
@@ -103,9 +106,9 @@ class JenkinsBot(BotPlugin):
         for counter, param in enumerate(params):
             param = param.split(':')
             if counter < len(params) - 1:
-                parameters_list = parameters_list + param[0].upper() + "': '" + param[1] + "', '"
+                parameters_list = parameters_list + param[0] + "': '" + param[1] + "', '"
             else:
-                parameters_list = parameters_list + param[0].upper() + "': '" + param[1] + "'"
+                parameters_list = parameters_list + param[0] + "': '" + param[1] + "'"
 
         parameters_list = parameters_list + '}'
 
